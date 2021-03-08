@@ -1,0 +1,31 @@
+version: '2'
+services:
+
+  postgresql:
+    # Version of PosgreSQL is 11, but can be any other that you need.
+    # See https://github.com/bitnami/bitnami-docker-postgresql for more info.
+    image: docker.io/bitnami/postgresql:11-debian-10
+    expose:
+      - 5432
+    # Persist database to the local file system.
+    volumes:
+      - ./.postgresql:/bitnami/postgresql:cached
+    # Pick environment variables from .env file.
+    env_file:
+      - .env
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+
+  python:
+    # Feel free to change the python version if needed.
+    # See https://hub.docker.com/_/python for more info.
+    image: python:3.9.2
+    # Where to start when get into docker container.
+    working_dir: /usr/src/application
+    # Map local application files into docker container.
+    volumes:
+      - ./application:/usr/src/application:cached
+    # Pick environment variables from .env file.
+    env_file:
+      - .env
